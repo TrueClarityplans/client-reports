@@ -17,6 +17,7 @@
             --shadow-color: rgba(0, 0, 0, 0.06);
             --guaranteed-color: #c53030;
             --current-color: #2f855a;
+            --middle-color: #2b6cb0;
         }
 
         body {
@@ -251,6 +252,7 @@
         
         .guaranteed { color: var(--guaranteed-color); }
         .current { color: var(--current-color); }
+        .middle { color: var(--middle-color); }
         .rate-note {
             font-size: 0.8em;
             color: #718096;
@@ -329,15 +331,19 @@
                     </ul>
                 </div>
                 <div class="intro-section">
-                    <h4>Understanding the Colors</h4>
+                    <h4>Understanding the Scenarios</h4>
                     <ul class="legend">
                         <li class="legend-item">
                             <div class="legend-color" style="background-color: var(--guaranteed-color);"></div>
-                            <span><strong>Worst-Case Promise:</strong> The minimum value the policy is guaranteed to have.</span>
+                            <span><strong>Worst-Case:</strong> The minimum guaranteed value.</span>
+                        </li>
+                        <li class="legend-item">
+                            <div class="legend-color" style="background-color: var(--middle-color);"></div>
+                            <span><strong>Middle Ground:</strong> A moderate, conservative projection.</span>
                         </li>
                         <li class="legend-item">
                             <div class="legend-color" style="background-color: var(--current-color);"></div>
-                            <span><strong>Realistic Projection:</strong> The value the policy is expected to have (not guaranteed).</span>
+                            <span><strong>Realistic Projection:</strong> Based on current rates (not guaranteed).</span>
                         </li>
                     </ul>
                 </div>
@@ -355,14 +361,16 @@
                 <div id="snapshot-fg" class="accordion-content is-open">
                     <div class="snapshot-grid">
                         <div class="snapshot-section"><h4>The Big Picture</h4><p>A balanced plan with a lower yearly cost, strong protections if you get sick, and the best worst-case guarantee of the three options.</p></div>
-                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 70:</strong> $162,921</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
                         <div class="snapshot-section snapshot-values">
                             <h4>What's It Worth at Age 75?</h4>
                             <p><strong>Cash You Can Access:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$153,385</span></p>
+                            <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$241,176<span class="rate-note">(4.25%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$305,145<span class="rate-note">(7.05%)</span></span></p>
                             <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$391,641</span></p>
+                            <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$479,432<span class="rate-note">(4.25%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$543,401<span class="rate-note">(7.05%)</span></span></p>
                         </div>
                         <div class="snapshot-section">
@@ -383,14 +391,16 @@
                 <div id="snapshot-mo" class="accordion-content">
                      <div class="snapshot-grid">
                         <div class="snapshot-section"><h4>The Big Picture</h4><p>A plan focused on growth. It has the same low yearly cost and is projected to build the most cash savings, but its worst-case guarantee is weaker.</p></div>
-                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 70:</strong> $162,921</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
                         <div class="snapshot-section snapshot-values">
                             <h4>What's It Worth at Age 75?</h4>
                             <p><strong>Cash You Can Access:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$140,147</span></p>
+                             <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$261,113<span class="rate-note">(4.00%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$322,884<span class="rate-note">(6.33%)</span></span></p>
                             <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$323,867</span></p>
+                             <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$444,833<span class="rate-note">(4.00%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$506,054<span class="rate-note">(6.33%)</span></span></p>
                         </div>
                         <div class="snapshot-section">
@@ -411,14 +421,16 @@
                 <div id="snapshot-augustar" class="accordion-content">
                      <div class="snapshot-grid">
                         <div class="snapshot-section"><h4>The Big Picture</h4><p>Your current plan has the highest death payout and is set up for aggressive savings, but it costs significantly more each year and has weaker guarantees.</p></div>
-                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $25,000</p><p><strong>Monthly Payment:</strong> $2,083.33</p><p><strong>Total Paid by Age 81:</strong> $487,499</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $25,000</p><p><strong>Monthly Payment:</strong> $2,083.33</p><p><strong>Total Paid by Age 70:</strong> $212,500</p><p><strong>Total Paid by Age 81:</strong> $487,499</p></div>
                         <div class="snapshot-section snapshot-values">
                             <h4>What's It Worth at Age 75?</h4>
                             <p><strong>Cash You Can Access:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$204,563</span></p>
+                             <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$360,027<span class="rate-note">(2.75%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$488,329<span class="rate-note">(6.55%)</span></span></p>
                             <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
                             <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$500,000</span></p>
+                             <p><span class="sub-row-label">Middle Ground:</span> <span class="middle">$500,000<span class="rate-note">(2.75%)</span></span></p>
                             <p><span class="sub-row-label">Realistic:</span> <span class="current">$591,386<span class="rate-note">(6.55%)</span></span></p>
                         </div>
                         <div class="snapshot-section">
@@ -500,6 +512,12 @@
                             <td data-label="AuguStar Virtus IUL II">$25,000 / $2,083.33</td>
                         </tr>
                         <tr>
+                            <td data-label="Question">Total Paid by Age 70?</td>
+                            <td data-label="F&G Everlast IUL">$162,921</td>
+                            <td data-label="Mutual of Omaha">$162,921</td>
+                            <td data-label="AuguStar Virtus IUL II">$212,500</td>
+                        </tr>
+                        <tr>
                             <td data-label="Question">Total Paid by Age 81?</td>
                             <td data-label="F&G Everlast IUL">$327,921</td>
                             <td data-label="Mutual of Omaha">$327,921</td>
@@ -514,6 +532,12 @@
                             <td data-label="Mutual of Omaha"><span class="guaranteed">$103,925</span></td>
                             <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$147,938</span></td>
                         </tr>
+                        <tr class="sub-row">
+                            <td data-label="At Age 70"><span class="sub-row-label">Middle Ground</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="middle">$147,093<span class="rate-note">(4.25%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="middle">$162,075<span class="rate-note">(4.00%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="middle">$211,291<span class="rate-note">(2.75%)</span></span></td>
+                        </tr>
                         <tr class="sub-row last-sub-row">
                             <td data-label="At Age 70"><span class="sub-row-label">Realistic</span></td>
                             <td data-label="F&G Everlast IUL"><span class="current">$170,738<span class="rate-note">(7.05%)</span></span></td>
@@ -527,6 +551,12 @@
                             <td data-label="Mutual of Omaha"><span class="guaranteed">$156,167</span></td>
                             <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$225,673</span></td>
                         </tr>
+                         <tr class="sub-row">
+                            <td data-label="At Age 80"><span class="sub-row-label">Middle Ground</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="middle">$338,093<span class="rate-note">(4.25%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="middle">$370,582<span class="rate-note">(4.00%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="middle">$528,183<span class="rate-note">(2.75%)</span></span></td>
+                        </tr>
                         <tr class="sub-row last-sub-row">
                             <td data-label="At Age 80"><span class="sub-row-label">Realistic</span></td>
                             <td data-label="F&G Everlast IUL"><span class="current">$474,674<span class="rate-note">(7.05%)</span></span></td>
@@ -539,6 +569,12 @@
                             <td data-label="F&G Everlast IUL"><span class="guaranteed">$93,639</span></td>
                             <td data-label="Mutual of Omaha"><span class="guaranteed">$35,178</span></td>
                             <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$10,718</span></td>
+                        </tr>
+                        <tr class="sub-row">
+                            <td data-label="At Age 90"><span class="sub-row-label">Middle Ground</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="middle">$460,437<span class="rate-note">(4.25%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="middle">$688,884<span class="rate-note">(4.00%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="middle">$928,838<span class="rate-note">(2.75%)</span></span></td>
                         </tr>
                         <tr class="sub-row last-sub-row">
                             <td data-label="At Age 90"><span class="sub-row-label">Realistic</span></td>
@@ -554,6 +590,12 @@
                             <td data-label="F&G Everlast IUL"><span class="guaranteed">$414,489</span></td>
                             <td data-label="Mutual of Omaha"><span class="guaranteed">$328,351</span></td>
                             <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$500,000</span></td>
+                        </tr>
+                        <tr class="sub-row">
+                             <td data-label="At Age 80"><span class="sub-row-label">Middle Ground</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="middle">$573,643<span class="rate-note">(4.25%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="middle">$464,759<span class="rate-note">(4.00%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="middle">$606,444<span class="rate-note">(2.75%)</span></span></td>
                         </tr>
                         <tr class="sub-row last-sub-row">
                             <td data-label="At Age 80"><span class="sub-row-label">Realistic</span></td>
@@ -575,6 +617,12 @@
                             <td data-label="Mutual of Omaha"><span class="guaranteed">49.9%</span></td>
                             <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">48.8%</span></td>
                         </tr>
+                         <tr class="sub-row">
+                            <td data-label="Growth at Age 80"><span class="sub-row-label">Middle Ground</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="middle">108.0%<span class="rate-note">(4.25%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="middle">118.4%<span class="rate-note">(4.00%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="middle">114.2%<span class="rate-note">(2.75%)</span></span></td>
+                        </tr>
                         <tr class="sub-row last-sub-row">
                             <td data-label="Growth at Age 80"><span class="sub-row-label">Realistic</span></td>
                             <td data-label="F&G Everlast IUL"><span class="current">151.7%<span class="rate-note">(7.05%)</span></span></td>
@@ -588,7 +636,7 @@
 
         <footer>
             <p class="footer">
-                This comparison is for illustrative purposes only. The "Realistic Projection" is based on current assumptions and is not guaranteed; actual results may be more or less favorable. Please review the full insurance illustrations for complete details.
+                This comparison is for illustrative purposes only. Non-guaranteed projections are based on current assumptions and are not guaranteed; actual results may be more or less favorable. Please review the full insurance illustrations for complete details.
             </p>
         </footer>
     </div>
