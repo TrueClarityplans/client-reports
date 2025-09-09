@@ -1,267 +1,624 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive IUL Policy Comparison Report</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>IUL Policy Comparison for Andres Lasaga</title>
     <style>
+        /* --- Base Styles & Typography --- */
+        :root {
+            --primary-color: #2b6cb0;
+            --primary-hover: #2c5282;
+            --card-bg: #ffffff;
+            --body-bg: #f7fafc;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --header-bg: #fdfdfe;
+            --shadow-color: rgba(0, 0, 0, 0.06);
+            --guaranteed-color: #c53030;
+            --current-color: #2f855a;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            line-height: 1.6;
         }
-        .accordion-content {
-            max-height: 0;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #718096;
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+        .h2-wrapper {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+        .h2-note {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #718096;
+        }
+
+        /* --- Intro Card --- */
+        .intro-card {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .intro-card h3 { color: var(--primary-hover); }
+        .intro-card p { margin-bottom: 16px; }
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 16px;
+        }
+        .intro-section h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary-hover);
+        }
+        .intro-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .legend { display: flex; flex-direction: column; gap: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; }
+
+        /* --- Accordion Card Styles --- */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 6px 18px var(--shadow-color);
+            margin-bottom: 20px;
             overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
         }
-        .accordion-header.active + .accordion-content {
-            max-height: 5000px; /* Adjust as needed */
+
+        .accordion-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background-color: var(--card-bg);
+            border: none;
+            padding: 20px 24px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s ease;
         }
-        .accordion-icon {
-            transition: transform 0.3s ease-in-out;
+
+        .accordion-toggle:hover {
+            background-color: #f7fafc;
         }
-        .accordion-header.active .accordion-icon {
-            transform: rotate(90deg);
+
+        .accordion-toggle::after {
+            content: '+';
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
         }
-        .red-flag {
-            color: #ef4444; /* red-500 */
+
+        .accordion-toggle[aria-expanded="true"]::after {
+            transform: rotate(45deg);
         }
-        .advantage-flag {
-            color: #22c55e; /* green-500 */
+
+        .accordion-content {
+            display: none;
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
         }
-        /* Custom styles for table striping */
-        .comparison-table tbody tr:nth-child(even) {
-            background-color: #f1f5f9; /* slate-100 */
+
+        .accordion-content.is-open {
+            display: block;
         }
-        .comparison-table th {
-            background-color: #475569; /* slate-600 */
-            color: white;
+
+        .snapshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .snapshot-section h4 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+        
+        .snapshot-section p, .snapshot-section ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.95rem;
+        }
+        .snapshot-section li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6em; /* This controls the space */
+            margin-bottom: 6px;
+        }
+        .snapshot-section li::before {
+            font-weight: bold;
+            line-height: 1.4; /* Helps with vertical alignment */
+        }
+        
+        .has-benefit::before {
+             content: '✓';
+            color: var(--current-color);
+        }
+        .missing-benefit::before {
+            content: '✗';
+            color: var(--guaranteed-color);
+        }
+
+        .snapshot-values p, .cost-section p {
+             margin-bottom: 4px;
+        }
+        
+        /* --- Key Feature Comparison Section --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .feature-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 6px 18px var(--shadow-color);
+        }
+        .feature-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+        }
+        .feature-card .icon { font-size: 1.5rem; }
+        .feature-card p { color: #4a5568; margin-top: 4px; }
+        .feature-card ul { list-style: none; padding: 0; margin: 16px 0; }
+        .feature-card li { margin-bottom: 8px; }
+        .feature-card .highlight {
+            font-weight: 700;
+            color: var(--primary-hover);
+            background-color: #ebf8ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .feature-summary {
+            font-weight: 700;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* --- Comparison Table Styles --- */
+        .table-wrapper {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 6px 18px var(--shadow-color);
+            overflow-x: auto;
+        }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background-color: var(--header-bg); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: #4a5568; }
+        tbody tr:nth-child(even) { background-color: #fcfdff; }
+        tbody tr:hover { background-color: #eff6ff; }
+        .category-row td { background-color: #f0f5fa; font-weight: 700; color: var(--primary-hover); font-size: 1.05rem; }
+        
+        .guaranteed { color: var(--guaranteed-color); }
+        .current { color: var(--current-color); }
+        .rate-note {
+            font-size: 0.8em;
+            color: #718096;
+            margin-left: 4px;
+            font-weight: 400;
+        }
+        
+        .sub-row td {
+            padding-top: 6px;
+            padding-bottom: 6px;
+            border-bottom: none;
+        }
+        .sub-row-label {
+            font-size: 0.85em;
+            color: #718096;
+            padding-right: 8px;
+        }
+        .age-row td {
+            font-weight: 600;
+            padding-bottom: 0;
+        }
+        .last-sub-row td {
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .explanation-cell .title {
+            font-weight: 600;
+        }
+        .explanation-cell .desc {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 2px;
+        }
+        
+        .footer { text-align: center; margin-top: 30px; font-style: italic; color: #718096; }
+        
+        /* --- Responsive Styles --- */
+        @media (min-width: 1024px) {
+            thead th { position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); }
+        }
+        @media (max-width: 1023px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; }
+            tr:nth-child(even) { background-color: transparent; }
+            td { border: none; border-bottom: 1px solid #edf2f7; position: relative; padding-left: 50%; white-space: normal; text-align: right; }
+            .category-row td, .age-row td, .sub-row td, .explanation-cell { padding-left: 16px; text-align: left; }
+            td:before { position: absolute; top: 50%; left: 16px; width: 45%; padding-right: 10px; white-space: nowrap; content: attr(data-label); font-weight: 600; text-align: left; transform: translateY(-50%); }
+            .sub-row-label { display: block; text-align: left; }
+            .sub-row td { text-align: right; padding-top: 2px; padding-bottom: 2px; }
+            .age-row td:before, .sub-row td:before, .explanation-cell:before { content: ''; }
+        }
+        @media (max-width: 768px) {
+            .feature-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Indexed Universal Life (IUL) Policy Comparison</h1>
-            <p class="text-lg text-slate-600 mt-2">An Interactive Analysis of Three Leading Policies</p>
+    <div class="container">
+        <header>
+            <h1>Life Insurance Policy Comparison</h1>
+            <p class="subtitle">A simplified analysis for Andres Lasaga.</p>
         </header>
 
-        <!-- Policy Snapshots Section -->
-        <section class="mb-10">
-            <h2 class="text-2xl font-bold border-b-2 border-slate-300 pb-2 mb-6">Policy Snapshots</h2>
-            <div class="space-y-4">
-                <!-- F&G Pathsetter® Accordion -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>F&G Pathsetter® Life Insurance</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700">
-                            <ul class="space-y-3 list-disc pl-5">
-                                <li><strong>Carrier:</strong> F&G Annuities & Life</li>
-                                <li><strong>Insured:</strong> Male, Age 61, Non-tobacco, FL, Table 2</li>
-                                <li><strong>Premium:</strong> $24,999.96 Annual. Year 1 Outlay: $52,920.96.</li>
-                                <li><strong>Death Benefit:</strong> Initial $296,613, Option B (Increasing)</li>
-                                <li><strong>Index Strategy:</strong> 100% S&P 500® One-Year Annual PtP With 100% PAR w/ CAP.</li>
-                                <li><strong>Riders:</strong> OPR, CIR, TIR, CHR (All no-cost).</li>
-                                <li><strong>Illustration Rate:</strong> 7.05% (Non-Guaranteed)</li>
-                                <li class="advantage-flag"><strong>Key Advantages:</strong> Flexible premium, comprehensive no-cost living benefits (Critical, Chronic, Terminal), Overloan Protection Rider, potential for non-guaranteed bonuses.</li>
-                                <li class="red-flag"><strong>Red Flags:</strong> Lapses at Age 97 under guaranteed assumptions. Some index options use back-tested data or have embedded costs and volatility risks.</li>
-                            </ul>
-                            <h4 class="font-semibold mt-4 mb-2">Year-by-Year Metrics (Current/Non-Guaranteed):</h4>
-                            <ul class="space-y-1 list-disc pl-5">
-                                <li><strong>Year 10 (Age 71):</strong> Account Value: $303,584, Surrender Value: $297,406</li>
-                                <li><strong>Year 20 (Age 81):</strong> Account Value: $847,924, Surrender Value: $847,924</li>
-                                <li><strong>Year 30 (Age 91):</strong> Account Value: $1,730,170, Surrender Value: $1,730,170</li>
+        <section class="intro-card">
+            <h3>Your Three Choices at a Glance</h3>
+            <p>This report compares your existing policy against two new proposals. The goal is to see which plan best fits your needs for cost, growth, and safety.</p>
+            <div class="intro-grid">
+                <div class="intro-section">
+                    <h4>The Options</h4>
+                    <ul>
+                        <li><strong>F&G Everlast:</strong> A balanced plan focused on safety and flexibility.</li>
+                        <li><strong>Mutual of Omaha:</strong> A growth-focused plan with a unique refund feature.</li>
+                        <li><strong>AuguStar Virtus (Existing):</strong> Your current high-premium, high-benefit plan.</li>
+                    </ul>
+                </div>
+                <div class="intro-section">
+                    <h4>Understanding the Colors</h4>
+                    <ul class="legend">
+                        <li class="legend-item">
+                            <div class="legend-color" style="background-color: var(--guaranteed-color);"></div>
+                            <span><strong>Worst-Case Promise:</strong> The minimum value the policy is guaranteed to have.</span>
+                        </li>
+                        <li class="legend-item">
+                            <div class="legend-color" style="background-color: var(--current-color);"></div>
+                            <span><strong>Realistic Projection:</strong> The value the policy is expected to have (not guaranteed).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="policy-snapshots">
+             <div class="h2-wrapper">
+                <h2>Policy Snapshots</h2>
+                <span class="h2-note">(Click to expand or collapse)</span>
+            </div>
+            
+            <div class="card">
+                <button class="accordion-toggle" aria-expanded="true" aria-controls="snapshot-fg">F&G Everlast IUL (New Proposal)</button>
+                <div id="snapshot-fg" class="accordion-content is-open">
+                    <div class="snapshot-grid">
+                        <div class="snapshot-section"><h4>The Big Picture</h4><p>A balanced plan with a lower yearly cost, strong protections if you get sick, and the best worst-case guarantee of the three options.</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
+                        <div class="snapshot-section snapshot-values">
+                            <h4>What's It Worth at Age 75?</h4>
+                            <p><strong>Cash You Can Access:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$153,385</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$305,145<span class="rate-note">(7.05%)</span></span></p>
+                            <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$391,641</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$543,401<span class="rate-note">(7.05%)</span></span></p>
+                        </div>
+                        <div class="snapshot-section">
+                            <h4>What If I Get Sick?</h4>
+                            <ul>
+                                <li class="has-benefit">Terminal Illness Benefit</li>
+                                <li class="has-benefit">Chronic Illness Benefit</li>
+                                <li class="has-benefit">Critical Illness Benefit</li>
+                                <li class="has-benefit">Overloan Protection</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-
-                <!-- Mutual of Omaha Accordion -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>Mutual of Omaha Income Advantage℠ IUL</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700">
-                            <ul class="space-y-3 list-disc pl-5">
-                                <li><strong>Carrier:</strong> United of Omaha Life Insurance Company</li>
-                                <li><strong>Insured:</strong> Male, Age 61, Non-Tobacco, FL, Table 2 (150%)</li>
-                                <li><strong>Premium:</strong> $24,999.96 Annual + $27,921 1035 Exchange.</li>
-                                <li><strong>Death Benefit:</strong> Initial $277,813, Increasing</li>
-                                <li><strong>Index Strategy:</strong> 100% S&P 500® One-Year 100% Participation Account.</li>
-                                <li><strong>Riders:</strong> ADB for Chronic/Terminal Illness, Guaranteed Refund Option, Lapse Guard (All no-cost).</li>
-                                <li><strong>Illustration Rate:</strong> 6.33% (Non-Guaranteed)</li>
-                                <li class="advantage-flag"><strong>Key Advantages:</strong> Unique Guaranteed Refund Option (return of premium feature). Lapse Guard rider protects against taxable events from loans. Zero percent floor on index strategies.</li>
-                                <li class="red-flag"><strong>Red Flags:</strong> Lapses at Age 91 under guaranteed assumptions. Surrender charges for 14 years. ABR benefits are discounted and have fees.</li>
-                            </ul>
-                            <h4 class="font-semibold mt-4 mb-2">Year-by-Year Metrics (Current/Non-Guaranteed):</h4>
-                            <ul class="space-y-1 list-disc pl-5">
-                                <li><strong>Year 10 (Age 71):</strong> Account Value: $334,247, Surrender Value: $329,246</li>
-                                <li><strong>Year 20 (Age 81):</strong> Account Value: $846,688, Surrender Value: $846,688</li>
-                                <li><strong>Year 30 (Age 91):</strong> Account Value: $1,518,203, Surrender Value: $1,518,203</li>
+            </div>
+            
+            <div class="card">
+                <button class="accordion-toggle" aria-expanded="false" aria-controls="snapshot-mo">Mutual of Omaha IUL (New Proposal)</button>
+                <div id="snapshot-mo" class="accordion-content">
+                     <div class="snapshot-grid">
+                        <div class="snapshot-section"><h4>The Big Picture</h4><p>A plan focused on growth. It has the same low yearly cost and is projected to build the most cash savings, but its worst-case guarantee is weaker.</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $15,000</p><p><strong>Monthly Payment:</strong> $1,250</p><p><strong>Total Paid by Age 81:</strong> $327,921</p></div>
+                        <div class="snapshot-section snapshot-values">
+                            <h4>What's It Worth at Age 75?</h4>
+                            <p><strong>Cash You Can Access:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$140,147</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$322,884<span class="rate-note">(6.33%)</span></span></p>
+                            <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$323,867</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$506,054<span class="rate-note">(6.33%)</span></span></p>
+                        </div>
+                        <div class="snapshot-section">
+                             <h4>What If I Get Sick?</h4>
+                            <ul>
+                                <li class="has-benefit">Terminal Illness Benefit</li>
+                                <li class="has-benefit">Chronic Illness Benefit</li>
+                                <li class="missing-benefit">Critical Illness Benefit</li>
+                                <li class="has-benefit">Guaranteed Refund Option</li>
                             </ul>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- AuguStar Virtus Accordion -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>AuguStar Virtus IUL II</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700">
-                            <ul class="space-y-3 list-disc pl-5">
-                                <li><strong>Carrier:</strong> AuguStar Life Assurance Corporation</li>
-                                <li><strong>Insured:</strong> Male, Age 59 (now 61), Nonsmoker, Table B</li>
-                                <li><strong>Premium:</strong> $2,083.33 Monthly ($24,999.96 Annual)</li>
-                                <li><strong>Death Benefit:</strong> Initial $500,000, Option A (Level)</li>
-                                <li><strong>Index Strategy:</strong> 100% S&P 500.</li>
-                                <li><strong>Riders:</strong> Accelerated Benefit Rider (ABR).</li>
-                                <li><strong>Illustration Rate:</strong> 6.55% (Non-Guaranteed)</li>
-                                <li class="advantage-flag"><strong>Key Advantages:</strong> Persistency Step-Up bonus increases crediting rate after 10 years. Starts with a high initial death benefit.</li>
-                                <li class="red-flag"><strong>Red Flags:</strong> Lapses at Age 89 under guaranteed assumptions. Option A (Level) Death Benefit is less efficient for maximizing cash value growth initially.</li>
+            <div class="card">
+                <button class="accordion-toggle" aria-expanded="false" aria-controls="snapshot-augustar">AuguStar Virtus IUL II (Your Existing Policy)</button>
+                <div id="snapshot-augustar" class="accordion-content">
+                     <div class="snapshot-grid">
+                        <div class="snapshot-section"><h4>The Big Picture</h4><p>Your current plan has the highest death payout and is set up for aggressive savings, but it costs significantly more each year and has weaker guarantees.</p></div>
+                        <div class="snapshot-section cost-section"><h4>How Much Does It Cost?</h4><p><strong>Yearly Payment:</strong> $25,000</p><p><strong>Monthly Payment:</strong> $2,083.33</p><p><strong>Total Paid by Age 81:</strong> $487,499</p></div>
+                        <div class="snapshot-section snapshot-values">
+                            <h4>What's It Worth at Age 75?</h4>
+                            <p><strong>Cash You Can Access:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$204,563</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$488,329<span class="rate-note">(6.55%)</span></span></p>
+                            <p style="margin-top: 12px;"><strong>Payout to Family:</strong></p>
+                            <p><span class="sub-row-label">Worst-Case:</span> <span class="guaranteed">$500,000</span></p>
+                            <p><span class="sub-row-label">Realistic:</span> <span class="current">$591,386<span class="rate-note">(6.55%)</span></span></p>
+                        </div>
+                        <div class="snapshot-section">
+                            <h4>What If I Get Sick?</h4>
+                            <ul>
+                                <li class="has-benefit">Terminal Illness Benefit</li>
+                                <li class="missing-benefit">Chronic Illness Benefit</li>
+                                <li class="missing-benefit">Critical Illness Benefit</li>
+                                <li class="missing-benefit">Overloan Protection</li>
                             </ul>
-                             <h4 class="font-semibold mt-4 mb-2">Year-by-Year Metrics (Current/Non-Guaranteed):</h4>
-                            <ul class="space-y-1 list-disc pl-5">
-                                <li><strong>Year 10 (Age 71):</strong> Account Value: $303,255, Surrender Value: $298,750</li>
-                                <li><strong>Year 20 (Age 81):</strong> Account Value: $867,991, Surrender Value: $867,991</li>
-                                <li><strong>Year 30 (Age 91):</strong> Account Value: $1,871,608, Surrender Value: $1,871,608</li>
-                            </ul>
+                             <p style="font-size: 0.8rem; color: #718096; margin-top: 8px;">(Note: Policy has a general "ABR" rider, but specific conditions like chronic/critical illness are not explicitly detailed.)</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Side-by-Side Comparison Section -->
-        <section class="mb-10">
-            <h2 class="text-2xl font-bold border-b-2 border-slate-300 pb-2 mb-6">Side-by-Side Comparison</h2>
-            <div class="overflow-x-auto bg-white rounded-lg shadow-md border border-slate-200">
-                <table class="w-full text-left text-sm md:text-base comparison-table">
-                    <thead class="text-xs uppercase">
+        <section id="key-feature-comparison">
+            <h2>Key Feature Comparison</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><span class="icon">🚀</span> Growth Potential</h3>
+                    <p>Which policy has the most room to grow when the market does well? This is based on the "cap rate" for the S&P 500 index.</p>
+                    <ul>
+                        <li><strong>F&G Everlast:</strong> <span class="highlight">12.00% Cap</span> (Highest)</li>
+                        <li><strong>AuguStar Virtus:</strong> 10.50% Cap</li>
+                        <li><strong>Mutual of Omaha:</strong> 10.00% Cap (Lowest)</li>
+                    </ul>
+                    <div class="feature-summary"><strong>Best for Growth Potential:</strong> F&G Everlast</div>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🛡️</span> Safety Net (Worst-Case Promise)</h3>
+                    <p>Which policy is guaranteed to last the longest if markets perform poorly and fees are at their highest?</p>
+                     <ul>
+                        <li><strong>F&G Everlast:</strong> <span class="highlight">Guaranteed to Age 94</span></li>
+                        <li><strong>AuguStar Virtus:</strong> Guaranteed to Age 89</li>
+                        <li><strong>Mutual of Omaha:</strong> Guaranteed to Age 89</li>
+                    </ul>
+                    <div class="feature-summary"><strong>Strongest Safety Net:</strong> F&G Everlast</div>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">✨</span> Flexibility & Unique Features</h3>
+                    <p>What extra benefits can be used while you are living?</p>
+                     <ul>
+                        <li><strong>F&G Everlast:</strong> <span class="highlight">Most comprehensive sickness benefits (Critical, Chronic, & Terminal).</span></li>
+                        <li><strong>Mutual of Omaha:</strong> Good sickness benefits plus a unique "Refund Option" to get premiums back.</li>
+                        <li><strong>AuguStar Virtus:</strong> General sickness benefit rider, but less specific than the others.</li>
+                    </ul>
+                    <div class="feature-summary"><strong>Most Flexible Benefits:</strong> Depends on preference. F&G for health coverage, Mutual of Omaha for the refund option.</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="side-by-side-comparison">
+            <h2>Side-by-Side Comparison</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
                         <tr>
-                            <th class="p-3 md:p-4">Feature</th>
-                            <th class="p-3 md:p-4">F&G Pathsetter®</th>
-                            <th class="p-3 md:p-4">Mutual of Omaha Income Advantage℠</th>
-                            <th class="p-3 md:p-4">AuguStar Virtus IUL II</th>
+                            <th>Question</th>
+                            <th>F&G Everlast IUL</th>
+                            <th>Mutual of Omaha IUL</th>
+                            <th>AuguStar Virtus IUL II (Existing)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-b">
-                            <td class="p-3 md:p-4 font-semibold">Initial Death Benefit</td>
-                            <td class="p-3 md:p-4">$296,613 (Increasing)</td>
-                            <td class="p-3 md:p-4">$277,813 (Increasing)</td>
-                            <td class="p-3 md:p-4">$500,000 (Level)</td>
+                        <tr class="category-row"><td colspan="4">The Basics</td></tr>
+                        <tr>
+                            <td data-label="Question">Initial Payout to Family?</td>
+                            <td data-label="F&G Everlast IUL">$235,550 (Grows over time)</td>
+                            <td data-label="Mutual of Omaha">$183,170 (Grows for 15 yrs)</td>
+                            <td data-label="AuguStar Virtus IUL II">$500,000 (Level)</td>
                         </tr>
-                        <tr class="border-b">
-                            <td class="p-3 md:p-4 font-semibold">Year 10 Account Value</td>
-                            <td class="p-3 md:p-4">$303,584</td>
-                            <td class="p-3 md:p-4">$334,247</td>
-                            <td class="p-3 md:p-4">$303,255</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="p-3 md:p-4 font-semibold">Year 20 Account Value</td>
-                            <td class="p-3 md:p-4">$847,924</td>
-                            <td class="p-3 md:p-4">$846,688</td>
-                            <td class="p-3 md:p-4">$867,991</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="p-3 md:p-4 font-semibold">Year 30 Account Value</td>
-                            <td class="p-3 md:p-4">$1,730,170</td>
-                            <td class="p-3 md:p-4">$1,518,203</td>
-                            <td class="p-3 md:p-4">$1,871,608</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="p-3 md:p-4 font-semibold">Key Riders</td>
-                            <td class="p-3 md:p-4">OPR, CIR, TIR, CHR (No-cost)</td>
-                            <td class="p-3 md:p-4">Lapse Guard, Guaranteed Refund (No-cost)</td>
-                            <td class="p-3 md:p-4">Accelerated Benefit Rider</td>
+                        <tr class="category-row"><td colspan="4">The Cost</td></tr>
+                        <tr>
+                            <td data-label="Question">Yearly / Monthly Payment?</td>
+                            <td data-label="F&G Everlast IUL">$15,000 / $1,250</td>
+                            <td data-label="Mutual of Omaha">$15,000 / $1,250</td>
+                            <td data-label="AuguStar Virtus IUL II">$25,000 / $2,083.33</td>
                         </tr>
                         <tr>
-                            <td class="p-3 md:p-4 font-semibold">Lapse under Guaranteed Assumptions</td>
-                            <td class="p-3 md:p-4">Year 36 (Age 97)</td>
-                            <td class="p-3 md:p-4">Age 91</td>
-                            <td class="p-3 md:p-4">Year 28 (Age 89)</td>
+                            <td data-label="Question">Total Paid by Age 81?</td>
+                            <td data-label="F&G Everlast IUL">$327,921</td>
+                            <td data-label="Mutual of Omaha">$327,921</td>
+                            <td data-label="AuguStar Virtus IUL II">$487,499</td>
+                        </tr>
+
+                        <tr class="category-row"><td colspan="4">Potential Savings (Cash You Can Access)</td></tr>
+                        <tr class="age-row"><td colspan="4">At Age 70</td></tr>
+                        <tr class="sub-row">
+                            <td data-label="At Age 70"><span class="sub-row-label">Worst-Case</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="guaranteed">$108,807</span></td>
+                            <td data-label="Mutual of Omaha"><span class="guaranteed">$103,925</span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$147,938</span></td>
+                        </tr>
+                        <tr class="sub-row last-sub-row">
+                            <td data-label="At Age 70"><span class="sub-row-label">Realistic</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="current">$170,738<span class="rate-note">(7.05%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="current">$186,516<span class="rate-note">(6.33%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="current">$256,239<span class="rate-note">(6.55%)</span></span></td>
+                        </tr>
+                        <tr class="age-row"><td colspan="4">At Age 80</td></tr>
+                        <tr class="sub-row">
+                            <td data-label="At Age 80"><span class="sub-row-label">Worst-Case</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="guaranteed">$178,939</span></td>
+                            <td data-label="Mutual of Omaha"><span class="guaranteed">$156,167</span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$225,673</span></td>
+                        </tr>
+                        <tr class="sub-row last-sub-row">
+                            <td data-label="At Age 80"><span class="sub-row-label">Realistic</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="current">$474,674<span class="rate-note">(7.05%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="current">$499,483<span class="rate-note">(6.33%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="current">$794,520<span class="rate-note">(6.55%)</span></span></td>
+                        </tr>
+                        <tr class="age-row"><td colspan="4">At Age 90</td></tr>
+                        <tr class="sub-row">
+                            <td data-label="At Age 90"><span class="sub-row-label">Worst-Case</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="guaranteed">$93,639</span></td>
+                            <td data-label="Mutual of Omaha"><span class="guaranteed">$35,178</span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$10,718</span></td>
+                        </tr>
+                        <tr class="sub-row last-sub-row">
+                            <td data-label="At Age 90"><span class="sub-row-label">Realistic</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="current">$895,203<span class="rate-note">(7.05%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="current">$1,080,415<span class="rate-note">(6.33%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="current">$1,745,545<span class="rate-note">(6.55%)</span></span></td>
+                        </tr>
+
+                        <tr class="category-row"><td colspan="4">The Payout for Your Family</td></tr>
+                        <tr class="age-row"><td colspan="4">At Age 80</td></tr>
+                        <tr class="sub-row">
+                             <td data-label="At Age 80"><span class="sub-row-label">Worst-Case</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="guaranteed">$414,489</span></td>
+                            <td data-label="Mutual of Omaha"><span class="guaranteed">$328,351</span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">$500,000</span></td>
+                        </tr>
+                        <tr class="sub-row last-sub-row">
+                            <td data-label="At Age 80"><span class="sub-row-label">Realistic</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="current">$710,224<span class="rate-note">(7.05%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="current">$536,164<span class="rate-note">(6.33%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="current">$912,244<span class="rate-note">(6.55%)</span></span></td>
+                        </tr>
+                        
+                        <tr class="category-row"><td colspan="4">Performance: A Look at Your Money's Growth</td></tr>
+                        <tr class="age-row">
+                            <td colspan="4" class="explanation-cell">
+                                <div class="title">How much cash do I have vs. what I paid?</div>
+                                <div class="desc">(A look at your cash value compared to total premiums paid by age 80. Over 100% means your savings grew more than what you put in.)</div>
+                            </td>
+                        </tr>
+                        <tr class="sub-row">
+                            <td data-label="Growth at Age 80"><span class="sub-row-label">Worst-Case</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="guaranteed">57.2%</span></td>
+                            <td data-label="Mutual of Omaha"><span class="guaranteed">49.9%</span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="guaranteed">48.8%</span></td>
+                        </tr>
+                        <tr class="sub-row last-sub-row">
+                            <td data-label="Growth at Age 80"><span class="sub-row-label">Realistic</span></td>
+                            <td data-label="F&G Everlast IUL"><span class="current">151.7%<span class="rate-note">(7.05%)</span></span></td>
+                            <td data-label="Mutual of Omaha"><span class="current">159.6%<span class="rate-note">(6.33%)</span></span></td>
+                            <td data-label="AuguStar Virtus IUL II"><span class="current">171.8%<span class="rate-note">(6.55%)</span></span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Efficiency Analysis Section -->
-        <section>
-            <h2 class="text-2xl font-bold border-b-2 border-slate-300 pb-2 mb-6">Efficiency Analysis</h2>
-            <div class="space-y-4">
-                <!-- Cash Value Growth -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>Cash Value Growth Efficiency</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700 space-y-3">
-                            <p><strong>Top Performer:</strong> AuguStar Virtus IUL II shows the highest projected Account Value at Year 30 ($1,871,608), despite a higher initial death benefit.</p>
-                            <p><strong>Runner-Up:</strong> F&G Pathsetter® is a close second, with strong long-term projections potentially driven by its higher illustrated rate (7.05%).</p>
-                            <p><strong>Conclusion:</strong> For pure cash accumulation based on current illustrations, <strong>AuguStar</strong> and <strong>F&G</strong> appear to be the most efficient choices.</p>
-                        </div>
-                    </div>
-                </div>
-                 <!-- Income Efficiency -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>Income Efficiency & Safety</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700 space-y-3">
-                            <p>While none of the policies illustrate a specific income stream, they are all designed to provide tax-advantaged income through loans.</p>
-                            <p><strong>Standout Feature:</strong> The <strong>Mutual of Omaha</strong> policy includes a <strong>Lapse Guard</strong> rider. This is a critical feature for income strategies, as it helps prevent the policy from lapsing due to outstanding loans, which could otherwise create a significant taxable event.</p>
-                            <p><strong>Conclusion:</strong> For clients prioritizing a safe and sustainable tax-free income stream, <strong>Mutual of Omaha</strong> offers a distinct advantage with its protective Lapse Guard rider.</p>
-                        </div>
-                    </div>
-                </div>
-                 <!-- Protection Efficiency -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200">
-                    <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-slate-800 focus:outline-none">
-                        <span>Protection Efficiency (Death Benefit & Riders)</span>
-                        <svg class="accordion-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-5 border-t border-slate-200 text-slate-700 space-y-3">
-                           <p><strong>Comprehensive Living Benefits:</strong> <strong>F&G Pathsetter®</strong> offers the most robust suite of no-cost Accelerated Benefit Riders, covering Critical, Chronic, and Terminal Illness, making it a strong choice for comprehensive health-related protection.</p>
-                           <p><strong>Unique Downside Protection:</strong> <strong>Mutual of Omaha</strong> provides a unique <strong>Guaranteed Refund Option</strong>. This acts as a safety net, allowing the policyholder to get premiums back if the policy is surrendered after a certain period, protecting against poor market performance.</p>
-                           <p><strong>Conclusion:</strong> For the broadest living benefit coverage, <strong>F&G</strong> is superior. For premium protection and downside risk mitigation, <strong>Mutual of Omaha's</strong> Guaranteed Refund Option is a compelling and unique feature.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <footer>
+            <p class="footer">
+                This comparison is for illustrative purposes only. The "Realistic Projection" is based on current assumptions and is not guaranteed; actual results may be more or less favorable. Please review the full insurance illustrations for complete details.
+            </p>
+        </footer>
     </div>
 
     <script>
-        // JavaScript for accordion functionality
         document.addEventListener('DOMContentLoaded', function () {
-            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            const accordionToggles = document.querySelectorAll('.accordion-toggle');
+            accordionToggles.forEach(button => {
+                button.addEventListener('click', function () {
+                    const content = document.getElementById(this.getAttribute('aria-controls'));
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
-            accordionHeaders.forEach(header => {
-                header.addEventListener('click', function () {
-                    this.classList.toggle('active');
+                    // Close all other accordions
+                    if (!isExpanded) {
+                        accordionToggles.forEach(otherButton => {
+                            if (otherButton !== this) {
+                                otherButton.setAttribute('aria-expanded', 'false');
+                                const otherContent = document.getElementById(otherButton.getAttribute('aria-controls'));
+                                otherContent.classList.remove('is-open');
+                            }
+                        });
+                    }
+
+                    // Toggle the clicked one
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    content.classList.toggle('is-open');
                 });
             });
         });
     </script>
-
 </body>
 </html>
+
